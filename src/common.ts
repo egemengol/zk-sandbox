@@ -8,12 +8,14 @@ import {
   createEcdsaV2,
   AlmostForeignField,
   Gadgets,
+  Field,
 } from 'o1js';
 
 // const { Field3 } = Gadgets;
 import { secp256k1 } from '@noble/curves/secp256k1';
 import { sha3_256 } from '@noble/hashes/sha3';
 import elliptic from 'elliptic';
+import { Field3 } from 'o1js/dist/node/lib/provable/gadgets/foreign-field';
 
 export class Secp256k1 extends createForeignCurveV2(
   Crypto.CurveParams.Secp256k1
@@ -76,7 +78,7 @@ class SignerNoble {
   }
 }
 
-class SignerElliptic {
+export class SignerElliptic {
   static eCurve = new elliptic.ec('secp256k1');
 
   public keyPairNative: elliptic.ec.KeyPair;
@@ -102,4 +104,63 @@ class SignerElliptic {
       s: BigInt(signed.s.toString()),
     });
   }
+}
+
+export function bytesLE2Word(wordBytes: UInt8[]): Field {
+  return wordBytes.reduce((acc, byte, idx) => {
+    const shift = 1n << BigInt(8 * idx);
+    return acc.add(byte.value.mul(shift));
+  }, Field.from(0));
+}
+
+export function bytesBE2Word(wordBytes: UInt8[]): Field {
+  let length = wordBytes.length;
+  return wordBytes.reduce((acc, byte, idx) => {
+    const shift = 1n << BigInt(8 * (length - 1 - idx));
+    return acc.add(byte.value.mul(shift));
+  }, Field.from(0));
+}
+
+export function bytesBE2Field3(bytes: UInt8[]): Field3 {
+  if (bytes.length !== 32) {
+    throw new Error('Expected 32 bytes for conversion to Field3');
+  }
+
+  // Assuming bigint conversion for each Field
+  const field0 = bytesBE2Word(bytes.slice(0, 11)); // Each field element covers around 88 bits, here interpreted over ~11 bytes
+  const field1 = bytesBE2Word(bytes.slice(11, 22));
+  const field2 = bytesBE2Word(bytes.slice(22, 32));
+
+  return [field0, field1, field2];
+}
+
+export function bytesLE2Field3(bytes: UInt8[]): Field3 {
+  if (bytes.length !== 32) {
+    throw new Error('Expected 32 bytes for conversion to Field3');
+  }
+
+  // Assuming bigint conversion for each Field
+  const field0 = bytesLE2Word(bytes.slice(0, 11)); // Each field element covers around 88 bits, here interpreted over ~11 bytes
+  const field1 = bytesLE2Word(bytes.slice(11, 22));
+  const field2 = bytesLE2Word(bytes.slice(22, 32));
+
+  return [field0, field1, field2];
+}
+
+export function hashToScalar(hash: Bytes) {
+  let x2 = bytesToLimbBE(hash.bytes.slice(0, 10));
+  let x1 = bytesToLimbBE(hash.bytes.slice(10, 21));
+  let x0 = bytesToLimbBE(hash.bytes.slice(21, 32));
+
+  return new Secp256k1.Scalar.AlmostReduced([x0, x1, x2]);
+}
+
+function bytesToLimbBE(bytes_: UInt8[]) {
+  let bytes = bytes_.map((x) => x.value);
+  let n = bytes.length;
+  let limb = bytes[0];
+  for (let i = 1; i < n; i++) {
+    limb = limb.mul(1n << 8n).add(bytes[i]);
+  }
+  return limb.seal();
 }
