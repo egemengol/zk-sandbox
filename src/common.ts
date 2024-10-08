@@ -1,17 +1,13 @@
 import {
   Bytes,
-  assert,
   createForeignCurveV2,
-  ForeignCurveV2,
   UInt8,
   Crypto,
   createEcdsaV2,
-  AlmostForeignField,
-  Gadgets,
   Field,
+  Cache,
 } from 'o1js';
 
-// const { Field3 } = Gadgets;
 import { secp256k1 } from '@noble/curves/secp256k1';
 import { sha3_256 } from '@noble/hashes/sha3';
 import elliptic from 'elliptic';
@@ -42,7 +38,7 @@ export class Bytes32 extends Bytes(32) {}
 //   return [x0, x1, x2];
 // }
 
-class SignerNoble {
+export class SignerNoble {
   public privNative: Uint8Array;
   public pubNative: Uint8Array;
   public pubO1: Secp256k1;
