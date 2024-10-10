@@ -18,7 +18,11 @@
     "sourceMap": true,
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
-    "useDefineForClassFields": false,
+    "useDefineForClassFields": false
   },
   "include": ["./src"],
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  }
 }

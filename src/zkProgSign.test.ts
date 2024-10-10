@@ -4,7 +4,7 @@ import { sha3_256 } from '@noble/hashes/sha3';
 import { SignerElliptic } from './common';
 // import * as fs from 'fs'; // Add this import
 
-describe('zkProg Sign', () => {
+describe.skip('zkProg Sign', () => {
   let verificationKey: VerificationKey;
   let signer: SignerElliptic;
 

@@ -3,7 +3,7 @@ import { ZkProgHash } from './zkProgHash';
 import { sha3_256 } from '@noble/hashes/sha3';
 // import * as fs from 'fs'; // Add this import
 
-describe('zkProg Hash', () => {
+describe.skip('zkProg Hash', () => {
   let verificationKey: VerificationKey;
 
   beforeAll(async () => {

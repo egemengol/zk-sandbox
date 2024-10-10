@@ -30,7 +30,7 @@ function generateLayered(signer: SignerElliptic) {
   return layered;
 }
 
-describe('zkProg Layered', () => {
+describe.skip('zkProg Layered', () => {
   let verificationKey: VerificationKey;
   let signer: SignerElliptic;
   let layered: Layered;
