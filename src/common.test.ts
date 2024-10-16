@@ -1,6 +1,11 @@
 import { Bytes, Hash } from 'o1js';
 import { sha3_256 } from '@noble/hashes/sha3';
-import { Bytes32, SignerElliptic, hashToScalar } from './common';
+import {
+  Bytes32,
+  SignerElliptic,
+  findSubarrayIndex,
+  hashToScalar,
+} from './common';
 
 describe('common', () => {
   let signer: SignerElliptic;
@@ -26,5 +31,14 @@ describe('common', () => {
     const aff = hashToScalar(hashO1);
     const isValid = signatureO1.verifySignedHashV2(aff, signer.pubO1);
     expect(isValid.toBoolean()).toBe(true);
+  });
+
+  it('find subarray', async () => {
+    // Example usage:
+    const haystack = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    const needle = new Uint8Array([4, 5, 6]);
+
+    const position = findSubarrayIndex(haystack, needle);
+    expect(position).toEqual(3);
   });
 });

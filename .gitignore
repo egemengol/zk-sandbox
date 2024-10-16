@@ -14,3 +14,6 @@ keys
 
 proof.json
 o1js
+mock.json
+passportData.json
+src/openpassportUtils.origin.ts

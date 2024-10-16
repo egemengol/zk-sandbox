@@ -160,3 +160,23 @@ function bytesToLimbBE(bytes_: UInt8[]) {
   }
   return limb.seal();
 }
+
+export function strToAscii(s: string): UInt8[] {
+  return [...s].map((char) => UInt8.from(char.charCodeAt(0)));
+}
+
+// Helper function to compare Uint8Arrays
+export function arrayEquals(a: Uint8Array, b: Uint8Array): boolean {
+  return a.length === b.length && a.every((val, index) => val === b[index]);
+}
+
+export function findSubarrayIndex<T>(
+  haystack: ArrayLike<T>,
+  needle: ArrayLike<T>
+): number {
+  const _haystack = Array.from(haystack);
+  const _needle = Array.from(needle);
+  return _haystack.findIndex((_, index) =>
+    _needle.every((element, i) => element === _haystack[index + i])
+  );
+}
