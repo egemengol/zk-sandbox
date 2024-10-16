@@ -6,45 +6,22 @@ class Bytes32 extends Bytes(32) {}
 export class SignedConcatHashInput extends Struct({
   dataGroupHashesConcatHash: Bytes32,
   signature: Ecdsa,
+  publicKey: Secp256k1,
 }) {}
-
-// function econtentFromConcatHash(concatHash: Bytes): Bytes {
-//   const eContent: UInt8[] = [
-//     49, 102, 48, 21, 6, 9, 42, -122, 72, -122, -9, 13, 1, 9, 3, 49, 8, 6, 6,
-//     103, -127, 8, 1, 1, 1, 48, 28, 6, 9, 42, -122, 72, -122, -9, 13, 1, 9, 5,
-//     49, 15, 23, 13, 49, 57, 49, 50, 49, 54, 49, 55, 50, 50, 51, 56, 90, 48, 47,
-//     6, 9, 42, -122, 72, -122, -9, 13, 1, 9, 4, 49, 34, 4, 32,
-//   ].map((n) => UInt8.from(n < 0 ? n + 256 : n));
-//   eContent.push(...concatHash.bytes);
-//   return Bytes.from(eContent);
-// }
-
-// function validateMockBroad(
-//   dataGroupConcat: Bytes,
-//   signature: Ecdsa,
-//   pubkey: Secp256k1
-// ) {
-//   const concatHash = Hash.SHA3_256.hash(dataGroupConcat);
-//   const eContent = econtentFromConcatHash(concatHash);
-//   const eContentHash = Hash.SHA3_256.hash(eContent);
-//   const aff = hashToScalar(eContentHash);
-//   const isValid = signature.verifySignedHashV2(aff, pubkey);
-//   isValid.assertTrue('signature validation failed');
-// }
 
 export const ConcatHash2Signed = ZkProgram({
   name: 'concat-hash-2-signed',
-  publicInput: Secp256k1,
+  publicInput: SignedConcatHashInput,
 
   methods: {
     prove: {
-      privateInputs: [SignedConcatHashInput],
+      privateInputs: [],
 
-      async method(publicKey: Secp256k1, inp: SignedConcatHashInput) {
+      async method(inp: SignedConcatHashInput) {
         const isValid = O1Land.isValidConcatHash(
           inp.dataGroupHashesConcatHash,
           inp.signature,
-          publicKey
+          inp.publicKey
         );
         isValid.assertTrue('broad validation failed');
       },

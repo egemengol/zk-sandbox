@@ -22,7 +22,7 @@
     "testw": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
     "lint": "npx eslint src/* --fix",
     "scratch": "NODE_NO_WARNINGS=1 node --experimental-strip-types src/scratch.ts",
-    "run": "NODE_NO_WARNINGS=1 node --experimental-strip-types src/layered/simple.ts"
+    "run": "NODE_NO_WARNINGS=1 node --experimental-strip-types src/mock/v2.ts"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.4",
