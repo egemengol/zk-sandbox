@@ -11,52 +11,52 @@ const MRZ_SAMPLE =
 
 // let VK_MRZ: VerificationKey
 
-class ProofMRZ extends Proof<MRZ, Digest> {}
+// class ProofMRZ extends Proof<MRZ, Digest> {}
 
-async function getProofMRZ(mock: Mock): Promise<ProofMRZ> {
-  const proofPath = './mrz.proof.json';
-  if (fs.existsSync(proofPath)) {
-    const serialized = fs.readFileSync(proofPath, 'utf8');
-    return await ProofMRZ.fromJSON(JSON.parse(serialized));
-  } else {
-    console.log('compiling mrz proof');
-    await V2Mrz.compile();
-    const mrzStruct = new MRZ({
-      bytes: Bytes.from(
-        [...mock.mrz].map((char) => UInt8.from(char.charCodeAt(0)))
-      ),
-    });
-    const proof = await V2Mrz.mrz2concatHash(
-      mrzStruct,
-      Bytes.from(mock.dataGroupHashesConcat)
-    );
-    fs.writeFileSync(proofPath, JSON.stringify(proof.toJSON()));
-    return proof;
-  }
-}
+// async function getProofMRZ(mock: Mock): Promise<ProofMRZ> {
+//   const proofPath = './mrz.proof.json';
+//   if (fs.existsSync(proofPath)) {
+//     const serialized = fs.readFileSync(proofPath, 'utf8');
+//     return await ProofMRZ.fromJSON(JSON.parse(serialized));
+//   } else {
+//     console.log('compiling mrz proof');
+//     await V2Mrz.compile();
+//     const mrzStruct = new MRZ({
+//       bytes: Bytes.from(
+//         [...mock.mrz].map((char) => UInt8.from(char.charCodeAt(0)))
+//       ),
+//     });
+//     const proof = await V2Mrz.mrz2concatHash(
+//       mrzStruct,
+//       Bytes.from(mock.dataGroupHashesConcat)
+//     );
+//     fs.writeFileSync(proofPath, JSON.stringify(proof.toJSON()));
+//     return proof;
+//   }
+// }
 
-class ProofSign extends Proof<SignedConcatHashInput, void> {}
+// class ProofSign extends Proof<SignedConcatHashInput, void> {}
 
-async function getProofSign(mock: Mock): Promise<ProofSign> {
-  const proofPath = './sign.proof.json';
-  if (fs.existsSync(proofPath)) {
-    const serialized = fs.readFileSync(proofPath, 'utf8');
-    return await ProofSign.fromJSON(JSON.parse(serialized));
-  } else {
-    console.log('compiling sign proof');
-    await ConcatHash2Signed.compile();
-    const publicKey = O1Land.parsePublicKey(mock.publicKey);
-    const signature = O1Land.parseSignature(mock.signature);
-    const concatHash = sha3_256(mock.dataGroupHashesConcat);
-    const proof = await ConcatHash2Signed.prove({
-      publicKey,
-      dataGroupHashesConcatHash: Bytes.from(concatHash),
-      signature,
-    });
-    fs.writeFileSync(proofPath, JSON.stringify(proof.toJSON()));
-    return proof;
-  }
-}
+// async function getProofSign(mock: Mock): Promise<ProofSign> {
+//   const proofPath = './sign.proof.json';
+//   if (fs.existsSync(proofPath)) {
+//     const serialized = fs.readFileSync(proofPath, 'utf8');
+//     return await ProofSign.fromJSON(JSON.parse(serialized));
+//   } else {
+//     console.log('compiling sign proof');
+//     await ConcatHash2Signed.compile();
+//     const publicKey = O1Land.parsePublicKey(mock.publicKey);
+//     const signature = O1Land.parseSignature(mock.signature);
+//     const concatHash = sha3_256(mock.dataGroupHashesConcat);
+//     const proof = await ConcatHash2Signed.prove({
+//       publicKey,
+//       dataGroupHashesConcatHash: Bytes.from(concatHash),
+//       signature,
+//     });
+//     fs.writeFileSync(proofPath, JSON.stringify(proof.toJSON()));
+//     return proof;
+//   }
+// }
 /*
 async function getProofs(mock: Mock): [DynMRZProof, DynSignatureProof] {
   const signProofPath = './sign.proof.json';
@@ -150,14 +150,14 @@ describe('V2', () => {
     // const dynProofSign = DynSignatureProof.fromProof(await getProofSign(mock));
 
     // final proof
-    // const proofFinal = await V2.verifyMock(
-    //   { signature, publicKey },
-    //   mrzStruct,
-    //   vkMRZ,
-    //   dynProofMRZ,
-    //   vkSign,
-    //   dynProofSign
-    // );
-    // expect(await V2.verify(proofFinal)).toBe(true);
+    const proofFinal = await V2.verifyMock(
+      // { signature, publicKey },
+      // mrzStruct,
+      // vkMRZ,
+      // dynProofMRZ
+      vkSign,
+      dynProofSign
+    );
+    expect(await V2.verify(proofFinal)).toBe(true);
   });
 });

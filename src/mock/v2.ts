@@ -40,27 +40,27 @@ function assertEqualsBytes32(l: Bytes32, r: Bytes32) {
 
 export const V2 = ZkProgram({
   name: 'v2',
-  publicInput: V2Input,
+  // publicInput: V2Input,
 
   methods: {
     verifyMock: {
       privateInputs: [
-        MRZ,
-        VerificationKey,
-        DynMRZProof,
+        // MRZ,
+        // VerificationKey,
+        // DynMRZProof,
         VerificationKey,
         DynSignatureProof,
       ],
 
       async method(
-        inp: V2Input,
-        mrz: MRZ,
-        vkMRZ: VerificationKey,
-        proofMRZ: DynMRZProof,
+        // inp: V2Input,
+        // mrz: MRZ,
+        // vkMRZ: VerificationKey,
+        // proofMRZ: DynMRZProof
         vkSign: VerificationKey,
         proofSign: DynSignatureProof
       ) {
-        proofMRZ.verify(vkMRZ);
+        // proofMRZ.verify(vkMRZ);
         proofSign.verify(vkSign);
 
         // // this.mrz == proofMRZ.mrz

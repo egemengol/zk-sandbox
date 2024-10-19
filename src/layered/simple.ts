@@ -18,7 +18,7 @@ const guessNumber = ZkProgram({
     guess: {
       privateInputs: [Field],
       async method(expect: Field, guess: Field) {
-        guess.assertEquals(guess);
+        expect.assertEquals(guess);
       },
     },
   },
