@@ -17,9 +17,15 @@ async function main() {
   worker.onmessage = (e) => {
     const msg = e.data as string;
     console.log(msg);
-    proofResult.innerHTML = msg;
+    if (msg !== 'pong') {
+      proofResult.innerHTML = msg;
+    }
   };
   worker.postMessage('start');
+
+  setInterval(() => {
+    worker.postMessage('ping');
+  }, 10000); // Send a message every 10 seconds
 }
 
 (async () => {

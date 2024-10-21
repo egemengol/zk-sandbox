@@ -72,5 +72,7 @@ self.onmessage = async (e) => {
       console.error('Error in zkWorker:', error);
       self.postMessage('Error occurred. Check console for details.');
     }
+  } else if (e.data === 'ping') {
+    self.postMessage('pong');
   }
 };
