@@ -3,7 +3,7 @@ import { Struct, ZkProgram, Bytes, UInt8, Hash } from 'o1js';
 // class MRZ extends Bytes(88) {}
 class Bytes257 extends Bytes(257) {}
 class Bytes32 extends Bytes(32) {}
-class Bytes88 extends Bytes(88) {}
+export class Bytes88 extends Bytes(88) {}
 
 export class Digest extends Struct({
   bytes: Bytes32,

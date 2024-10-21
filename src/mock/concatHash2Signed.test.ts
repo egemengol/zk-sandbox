@@ -20,9 +20,10 @@ describe('mock', () => {
     const publicKey = O1Land.parsePublicKey(mock.publicKey);
     const signature = O1Land.parseSignature(mock.signature);
     const concatHash = sha3_256(mock.dataGroupHashesConcat);
-    const proof = await ConcatHash2Signed.prove(publicKey, {
+    const proof = await ConcatHash2Signed.prove({
       dataGroupHashesConcatHash: Bytes.from(concatHash),
       signature,
+      publicKey,
     });
     const isSolution = await verify(proof.toJSON(), verificationKey);
     expect(isSolution).toBe(true);

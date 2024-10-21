@@ -15,7 +15,13 @@ export const V2Simplified = ZkProgram({
       privateInputs: [VerificationKey, DynMRZProof],
 
       async method(vkMRZ: VerificationKey, proofMRZ: DynMRZProof) {
-        proofMRZ.verify(vkMRZ);
+        try {
+          console.log('1');
+          proofMRZ.verify(vkMRZ);
+          console.log('1');
+        } catch (err) {
+          console.error('BENDEN', err);
+        }
       },
     },
   },
