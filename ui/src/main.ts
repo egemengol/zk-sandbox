@@ -1,5 +1,5 @@
 import './style.css';
-import { setupZkSign } from './placeZkProg';
+// import { setupZkSign } from './placeZkProg';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
@@ -9,6 +9,19 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   </div>
 `;
 
+async function main() {
+  const proofResult = document.querySelector<HTMLDivElement>('#proofResult')!;
+  const worker = new Worker(new URL('./placeZkProg.ts', import.meta.url), {
+    type: 'module',
+  });
+  worker.onmessage = (e) => {
+    const msg = e.data as string;
+    console.log(msg);
+    proofResult.innerHTML = msg;
+  };
+  worker.postMessage('start');
+}
+
 (async () => {
-  await setupZkSign();
+  await main();
 })();
